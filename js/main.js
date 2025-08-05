@@ -107,18 +107,18 @@ for (const link of filterLink) {
 }
 
 // Modal / Full Site Modal "open buttons"
-for (const elm of openModal) {
-  elm.addEventListener("click", function () {
-    const modalId = this.dataset.open;
-    document.getElementById(modalId).classList.add(isVisible);
-  });
-}
+// for (const elm of openModal) {
+//   elm.addEventListener("click", function () {
+//     const modalId = this.dataset.open;
+//     document.getElementById(modalId).classList.add(isVisible);
+//   });
+// }
 
-for (const elm of closeModal) {
-  elm.addEventListener("click", function () {
-    this.parentElement.parentElement.parentElement.classList.remove(isVisible);
-  });
-}
+// for (const elm of closeModal) {
+//   elm.addEventListener("click", function () {
+//     this.parentElement.parentElement.parentElement.classList.remove(isVisible);
+//   });
+// }
 
 // Modal
 document.addEventListener("click", (e) => {

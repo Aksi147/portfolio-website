@@ -107,6 +107,8 @@ const portfolioCards = [
   },
 ];
 
+const isVisible = "is-visible";
+
 const portfolioGrid = document.querySelector(".portfolio-grid");
 
 const fragment = document.createDocumentFragment();
@@ -152,38 +154,73 @@ portfolioGrid.appendChild(fragment);
 
 // End of dynamic card HTML with JS
 
-const popupModalsDiv = document.querySelector(".all-popup-modals");
+// Modal handling
+document.addEventListener("DOMContentLoaded", () => {
+  const popupModalsDiv = document.querySelector(".all-popup-modals");
+  if (!popupModalsDiv) {
+    console.error('Element with class "all-popup-modals" not found');
+    return;
+  }
 
-const fragmentTwo = document.createDocumentFragment();
+  portfolioGrid.addEventListener("click", (event) => {
+    console.log("Click event target:", event.target); // Debug: What was clicked?
+    const clickedElement = event.target.closest("div[data-open]");
+    console.log("Clicked element with data-open:", clickedElement); // Debug: Found portfolio-card?
+    if (!clickedElement) return;
 
-for (const popup of portfolioCards) {
-  const modalPopup = document.createElement("div");
+    const dataOpenValue = clickedElement.dataset.open;
+    console.log("data-open value:", dataOpenValue); // Debug: Correct data-open?
+    const matchingPopup = portfolioCards.find(
+      (popup) => popup.dataOpen === dataOpenValue
+    );
+    console.log("Matching popup:", matchingPopup); // Debug: Found matching card?
+    if (!matchingPopup) return;
 
-  modalPopup.innerHTML = `
-      <div id="${popup.dataOpen}" class="modal" data-animation="slideInOutTop">
-        <div class="modal-dialog">
-          <header class="modal-header">
-            <h3>${popup.popupData.h3}</h3>
-            <i class="fas fa-times" data-close></i>
-          </header>
-          <div class="modal-body">
-            <div class="img-wrapper">
-              <img src="${popup.imgSrc}" alt="portfolio img" />
-            </div>
-            <div class="text-wrapper">
-              <p><strong>${popup.popupData.p1}</strong></p>
-              <p>
-                ${popup.popupData.p2}
-              </p>
-              <p>
-                ${popup.popupData.p3}
-              </p>
-            </div>
+    // Check for existing modal
+    let modal = popupModalsDiv.querySelector(`#${matchingPopup.dataOpen}`);
+    if (modal) {
+      console.log(`Modal with id ${matchingPopup.dataOpen} already exists`);
+      modal.classList.add("is-visible"); // Show existing modal
+      return;
+    }
+
+    // Create new modal
+    modal = document.createElement("div");
+    modal.id = matchingPopup.dataOpen;
+    modal.setAttribute("data-animation", "slideInOutTop");
+    modal.className = "modal is-visible"; // Add is-visible immediately
+
+    modal.innerHTML = `
+      <div class="modal-dialog">
+        <header class="modal-header">
+          <h3>${matchingPopup.popupData.h3}</h3>
+          <i class="fas fa-times" data-close></i>
+        </header>
+        <div class="modal-body">
+          <div class="img-wrapper">
+            <img src="${matchingPopup.imgSrc}" alt="portfolio img" />
+          </div>
+          <div class="text-wrapper">
+            <p><strong>${matchingPopup.popupData.p1}</strong></p>
+            <p>${matchingPopup.popupData.p2}</p>
+            <p>${matchingPopup.popupData.p3}</p>
           </div>
         </div>
       </div>`;
 
-  fragmentTwo.appendChild(modalPopup);
-}
+    console.log("Appending modal:", modal); // Debug: Confirm modal creation
+    popupModalsDiv.appendChild(modal);
+  });
 
-popupModalsDiv.appendChild(fragmentTwo);
+  // Close modal
+  popupModalsDiv.addEventListener("click", (event) => {
+    if (event.target.matches("[data-close]")) {
+      const modal = event.target.closest(".modal");
+      if (modal) {
+        console.log("Closing modal:", modal);
+        modal.classList.remove("is-visible"); // Hide modal
+        // Optionally: modal.remove(); // Remove from DOM
+      }
+    }
+  });
+});
