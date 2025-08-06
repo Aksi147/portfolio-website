@@ -115,23 +115,36 @@ const dark = "dark";
 const light = "light";
 const open = "open";
 const active = "active";
-const isVisible = "is-visible";
 const dataFilter = "[data-filter]";
 const portfolioData = "[data-item]";
+const isVisible = "is-visible";
 const modalOpen = "[data-open]";
 const modalClose = "[data-close]";
 
 const root = document.documentElement;
 
+// Full Site Modal "open buttons"
+const openModal = document.querySelectorAll(modalOpen);
+const closeModal = document.querySelectorAll(modalClose);
+
+for (const elm of openModal) {
+  elm.addEventListener("click", function () {
+    const modalId = this.dataset.open;
+    console.log(modalId);
+    document.getElementById(modalId).classList.add(isVisible);
+  });
+}
+
+for (const elm of closeModal) {
+  elm.addEventListener("click", function () {
+    this.parentElement.parentElement.parentElement.classList.remove(isVisible);
+  });
+}
+
 // Theme
 const toggleTheme = document.querySelector(themeTab);
 const switcher = document.querySelectorAll(switcherBtn);
 const currentTheme = localStorage.getItem(theme);
-
-// Portfolio
-const filterLink = document.querySelectorAll(dataFilter);
-const portfolioItems = document.querySelectorAll(portfolioData);
-const searchBox = document.querySelector("#search");
 
 // Utility functions
 const setActive = (elm, selector) => {
@@ -181,34 +194,6 @@ for (const elm of switcher) {
   });
 }
 
-// Portfolio filtering
-searchBox.addEventListener("keyup", (e) => {
-  const searchInput = e.target.value.toLowerCase().trim();
-  portfolioItems.forEach((card) => {
-    if (card.dataset.item.includes(searchInput)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
-});
-
-for (const link of filterLink) {
-  link.addEventListener("click", function () {
-    setActive(link, ".filter-link");
-    const filter = this.dataset.filter;
-    portfolioItems.forEach((card) => {
-      if (filter === "all") {
-        card.style.display = "block";
-      } else if (card.dataset.item === filter) {
-        card.style.display = "block";
-      } else {
-        card.style.display = "none";
-      }
-    });
-  });
-}
-
 // Create portfolio cards
 const portfolioGrid = document.querySelector(".portfolio-grid");
 if (!portfolioGrid) {
@@ -245,6 +230,40 @@ if (!portfolioGrid) {
     fragment.appendChild(portfolioCard);
   }
   portfolioGrid.appendChild(fragment);
+}
+
+// Portfolio
+const filterLink = document.querySelectorAll(dataFilter);
+const portfolioItems = document.querySelectorAll(portfolioData);
+const searchBox = document.querySelector("#search");
+
+// Portfolio filtering
+searchBox.addEventListener("keyup", (e) => {
+  const searchInput = e.target.value.toLowerCase().trim();
+  portfolioItems.forEach((card) => {
+    if (card.dataset.item.includes(searchInput)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+});
+
+for (const link of filterLink) {
+  link.addEventListener("click", function () {
+    setActive(link, ".filter-link");
+    const filter = this.dataset.filter;
+    portfolioItems.forEach((card) => {
+      if (filter === "all") {
+        card.style.display = "block";
+      } else if (card.dataset.item === filter) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+    console.log(portfolioItems);
+  });
 }
 
 // Modal handling
