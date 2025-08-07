@@ -130,7 +130,6 @@ const closeModal = document.querySelectorAll(modalClose);
 for (const elm of openModal) {
   elm.addEventListener("click", function () {
     const modalId = this.dataset.open;
-    console.log(modalId);
     document.getElementById(modalId).classList.add(isVisible);
   });
 }
@@ -262,7 +261,6 @@ for (const link of filterLink) {
         card.style.display = "none";
       }
     });
-    console.log(portfolioItems);
   });
 }
 
@@ -273,23 +271,18 @@ if (!popupModalsDiv) {
 }
 
 portfolioGrid.addEventListener("click", (event) => {
-  console.log("Click event target:", event.target);
   const clickedElement = event.target.closest("div[data-open]");
-  console.log("Clicked element with data-open:", clickedElement);
   if (!clickedElement) return;
 
   const dataOpenValue = clickedElement.dataset.open;
-  console.log("data-open value:", dataOpenValue);
   const matchingPopup = portfolioCards.find(
     (popup) => popup.dataOpen === dataOpenValue
   );
-  console.log("Matching popup:", matchingPopup);
   if (!matchingPopup) return;
 
   // Check for existing modal
   let modal = popupModalsDiv.querySelector(`#${matchingPopup.dataOpen}`);
   if (modal) {
-    console.log(`Modal with id ${matchingPopup.dataOpen} already exists`);
     modal.classList.add("is-visible");
     return;
   }
@@ -318,7 +311,6 @@ portfolioGrid.addEventListener("click", (event) => {
         </div>
       </div>`;
 
-  console.log("Appending modal:", modal);
   popupModalsDiv.appendChild(modal);
 
   // Trigger animation by adding is-visible after a delay
@@ -337,7 +329,6 @@ popupModalsDiv.addEventListener("click", (event) => {
   ) {
     const modal = event.target.closest(".modal");
     if (modal) {
-      console.log("Closing modal:", modal);
       modal.classList.remove("is-visible");
     }
   }
@@ -348,7 +339,6 @@ document.addEventListener("keyup", (e) => {
   if (e.key === "Escape") {
     const modal = document.querySelector(".modal.is-visible");
     if (modal) {
-      console.log("Closing modal via Escape:", modal);
       modal.classList.remove("is-visible");
     }
   }
