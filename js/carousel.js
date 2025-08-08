@@ -18,17 +18,21 @@ let prev = current > 0 ? current - 1 : slides.length - 1;
 // ---[prev] current - 1 : length - 1
 // update the CSS classes
 
+const update = () => {
+  slides.forEach((slide) => {
+    slide.classList.remove("active", "prev", "next");
+  });
+  slides[current].classList.add("active");
+  slides[prev].classList.add("prev");
+  slides[next].classList.add("next");
+};
+
 const goToNum = (number) => {
   current = number;
   next = current < slides.length - 1 ? current + 1 : 0;
   prev = current > 0 ? current - 1 : slides.length - 1;
-  console.log("prev", prev);
-  console.log("current", current);
-  console.log("next", next);
+  update();
 };
-console.log("prev", prev);
-console.log("current", current);
-console.log("next", next);
 
 const goToNext = () =>
   current < slides.length - 1 ? goToNum(current + 1) : goToNum(0);
@@ -40,3 +44,5 @@ for (let i = 0; i < buttons.length; i++) {
     i === 0 ? goToPrev() : goToNext()
   );
 }
+
+update();
